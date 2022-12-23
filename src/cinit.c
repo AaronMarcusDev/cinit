@@ -51,7 +51,14 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        printf("Not supported yet.");
+        char *mainFileData = "echo #include \"common.h\" >> main.c && echo. >> main.c && echo int main(int argc, char *argv) { >> main.c && echo. >> main.c && echo return 0; >> main.c && echo } >> main.c";
+        char commonFileData[512] = "";
+        snprintf(commonFileData, sizeof(commonFileData), "echo #ifndef %s_common_h >> common.h && echo #define %s_common_h >> common.h && echo. >> common.h && echo #endif >> common.h", argv[argc - 1], argv[argc - 1]);
+        char command[1024] = "";
+        snprintf(command, sizeof(command), "mkdir %s && cd %s && mkdir src && cd src && touch main.c && touch common.h && %s && %s", argv[argc - 1], argv[argc - 1], mainFileData, commonFileData);
+        if (!silent)
+            printf("%s\n", command);
+        system(command);
     }
 
     if (!silent)
